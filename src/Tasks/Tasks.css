@@ -1,0 +1,55 @@
+table.task-table {
+  width: 100%;
+  border: 1px solid #000000;  
+  border-collapse: collapse;
+  display: block;
+  height: 400px;
+  overflow: auto;
+  background-image: linear-gradient(to left, #baf685, #72ecc5);
+}
+.task-table th,
+.task-table td {
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #000000; 
+}
+
+.task-table th {
+  background-image: linear-gradient(to left, #baf685, #72ecc5);
+  border: 1px solid #1b1b1b;
+  width: 500px;
+}
+
+.task-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Add hover styles for rows */
+.task-table tr:hover {
+  background-color: #edc6c6;
+}
+
+.complete-button {
+  background-color: #4CAF50; /* Green color for "Complete" */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  margin-right: 5px; /* Add spacing between buttons */
+}
+
+.delete-button {
+  background-color: #f44336; /* Red color for "Delete" */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.complete-button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+.delete-button:hover {
+  background-color: #d32f2f; /* Darker red on hover */
+}
