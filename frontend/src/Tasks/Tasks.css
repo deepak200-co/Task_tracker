@@ -1,0 +1,64 @@
+.task-container {
+  width: 100%;
+  height: 600px;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  background-color: #95A5A6;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.001em;
+  border-radius: 3px;
+  padding: 10px 15px;
+  margin-bottom: 1%;
+}
+
+.table-row {
+  display: flex;
+  justify-content: space-between;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 30px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+
+
+.action-btns {
+  display: flex;
+}
+
+.action-btns button,
+.edit-btn {
+  margin-right: 5px;
+  padding: 8px 16px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.complete-button,.complete-button:hover {
+  background-color: #4CAF50;
+}
+
+.delete-button, 
+.delete-button:hover {
+  background-color: #d32f2f;
+}
+
+@media all and (max-width: 767px) {
+  .table-header {
+    display: none;
+  }
+  .table-row {
+    flex-direction: column;
+  }
+  .col {
+    flex-basis: 100%;
+    margin-bottom: 10px;
+  }
+}
