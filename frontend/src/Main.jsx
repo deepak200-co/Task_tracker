@@ -3,33 +3,19 @@ import axios from 'axios';
 import Header from './Header/Header';
 import Tasks from './Tasks/Tasks';
 import './Main.css';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import auth from './firebase';
 
 function Main() {
   const [tasks, setTasks] = useState([]);
+  const [user] = useAuthState(auth);
   const [duplicateTaskMessage, setDuplicateTaskMessage] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+  
+  
+const addTask = async (text, dueDate, category, priorities) => {
 
-// Fetch current user by email
-// Fetch current user by email
-const fetchCurrentUser = async () => {
-  try {
-    // Make an API call to fetch the current user by email
-    const response = await axios.get('http://localhost:5000/currentUserByEmail');
-    console.log('Current user:', response.data); // Log the current user data
-    setCurrentUser(response.data); // Assuming response.data contains the user details
-  } catch (error) {
-    console.error('Error fetching current user:', error);
-  }
-};
-
-// Add task with email instead of ID
-const addTask = async (text, dueDate, category, priority) => {
-  if (!currentUser || !currentUser.email) {
-    console.error('Current user or email is null.');
-    return;
-  }
 
   const taskExists = tasks.some((task) => task.text === text);
   if (taskExists) {
@@ -40,8 +26,8 @@ const addTask = async (text, dueDate, category, priority) => {
         text,
         dueDate,
         categories: [category],
-        email: currentUser.email, // Use email instead of ID
-        priority,
+        email: user.email,
+        priorities,
       });
       setTasks([...tasks, response.data]);
       setDuplicateTaskMessage('');
@@ -150,7 +136,7 @@ const addTask = async (text, dueDate, category, priority) => {
                 <option value="Work">Work</option>
                 <option value="Study">Study</option>
               </select><br><br>
-              <label for="priority">Priority:</label>
+              <label for="priority">Priorities:</label>
               <select id="priority" name="priority">
                 <option value="">select priority</option>
                 <option value="High">High</option>

@@ -21,17 +21,20 @@ app.get("/:email",async(req,res) => {
     }
 })
 
-// Route to create a task
 app.post("/tasks", async (req, res) => {
     try {
-        const { text, dueDate, categories, email } = req.body; // Use email instead of user
+        const { text, dueDate, categories, email, priorities } = req.body; 
+        console.log(req.body)
         if (!text || !email) {
             return res.status(400).json({ error: "Text and email are required fields" });
         }
-        const task = await Task.create({ text, dueDate, categories, email }); // Use email instead of user
+        const task = new Task({ text, dueDate, categories, email, priorities })
+        console.log(task)
+        await task.save()
         res.status(201).json(task);
     } catch (err) {
         res.status(500).json({ error: err.message });
+        console.log(err)
     }
 });
 
@@ -39,16 +42,28 @@ app.post("/tasks", async (req, res) => {
 app.put("/tasks/:taskId", async (req, res) => {
     try {
         const { taskId } = req.params;
-        const { text, dueDate, categories, email } = req.body; // Use email instead of user
+        const { text, dueDate, categories, email,priorities } = req.body; // Use email instead of user
         if (!text || !email) {
             return res.status(400).json({ error: "Text and email are required fields" });
         }
-        const updatedTask = await Task.findByIdAndUpdate(taskId, { text, dueDate, categories, email }, { new: true }); // Use email instead of user
+        const updatedTask = await Task.findByIdAndUpdate(taskId, { text, dueDate, categories, email,priorities }, { new: true }); // Use email instead of user
         res.status(200).json(updatedTask);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
+
+
+app.get("/tasks/email", async (req, res) => {
+    try {
+        const { email } = req.body;
+        const tasks = await Task.find({ email });
+        res.status(200).json(tasks);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 
 mongoose
     .connect(`mongodb+srv://Task_Tracker:tasktracker@cluster0.ygbgeks.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`)

@@ -14,12 +14,10 @@ const taskSchema = new mongoose.Schema({
     },
     email : {
         type: String,
-        required: true,
-        unique: true
+        required: false
     },
-    priority: {
-        type: String,
-        enum: ['low', 'moderate', 'high'], 
+    priorities: {
+        type: [String], 
         required: false
     },
     completed: {
