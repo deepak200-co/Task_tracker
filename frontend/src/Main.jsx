@@ -11,105 +11,66 @@ function Main() {
   const [user] = useAuthState(auth);
   const [duplicateTaskMessage, setDuplicateTaskMessage] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
-  const [showAddTaskModal, setShowAddTaskModal] = useState(false);
-  
-  
-const addTask = async (text, dueDate, category, priorities) => {
 
-
-  const taskExists = tasks.some((task) => task.text === text);
-  if (taskExists) {
-    setDuplicateTaskMessage('Task already exists!');
-  } else {
-    try {
-      const response = await axios.post('http://localhost:5000/tasks', {
-        text,
-        dueDate,
-        categories: [category],
-        email: user.email,
-        priorities,
-      });
-      setTasks([...tasks, response.data]);
-      setDuplicateTaskMessage('');
-      setShowAddTaskModal(false);
-    } catch (error) {
-      console.error('Error adding task:', error);
-    }
-  }
-};
-
-
-  const deleteTask = async (id) => {
-    try {
-      await axios.delete(`http://localhost:5000/tasks/${id}`);
-      setTasks(tasks.filter((task) => task.id !== id));
-    } catch (error) {
-      console.error('Error deleting task:', error);
-    }
-  };
-
-  const editTask = async (id, newText) => {
-    try {
-      const response = await axios.put(`http://localhost:5000/tasks/${id}`, {
-        text: newText,
-      });
-      setTasks(tasks.map((task) => (task.id === id ? response.data : task)));
-    } catch (error) {
-      console.error('Error editing task:', error);
-    }
-  };
-
-  const addCategoryToTask = async (taskId, category) => {
-    const task = tasks.find((task) => task.id === taskId);
-    if (task && !task.categories.includes(category)) {
-      try {
-        const response = await axios.put(`http://localhost:5000/tasks/${taskId}`, {
-          ...task,
-          categories: [...task.categories, category],
-        });
-        setTasks(tasks.map((t) => (t.id === taskId ? response.data : t)));
-      } catch (error) {
-        console.error('Error adding category to task:', error);
+  useEffect(() => {
+    const getTasks = async () => {
+      if (user) {
+        try {
+          const response = await axios.post(
+            "http://localhost:5000/tasks/email",
+            { email: user.email }
+          );
+          setTasks(response.data);
+        } catch (error) {
+          console.log("Error fetching tasks: ", error);
+        }
       }
-    }
-  };
+    };
+    getTasks();
+  }, [user]);
 
-  const removeCategoryFromTask = async (taskId, category) => {
-    const task = tasks.find((task) => task.id === taskId);
-    if (task && task.categories.includes(category)) {
+  const addTask = async (text, dueDate, category, priorities) => {
+    const taskExists = tasks.some((task) => task.text === text);
+    if (taskExists) {
+      setDuplicateTaskMessage('Task already exists!');
+    } else {
       try {
-        const response = await axios.put(`http://localhost:5000/tasks/${taskId}`, {
-          ...task,
-          categories: task.categories.filter((cat) => cat !== category),
+        const response = await axios.post('http://localhost:5000/tasks', {
+          text,
+          dueDate,
+          categories: [category],
+          email: user.email,
+          priorities,
         });
-        setTasks(tasks.map((t) => (t.id === taskId ? response.data : t)));
+        setTasks([...tasks, response.data]);
+        setDuplicateTaskMessage('');
       } catch (error) {
-        console.error('Error removing category from task:', error);
+        console.error('Error adding task:', error);
       }
-    }
-  };
-
-  const addDueDateToTask = async (taskId, dueDate) => {
-    try {
-      const response = await axios.put(`http://localhost:5000/tasks/${taskId}`, {
-        dueDate,
-      });
-      setTasks(tasks.map((task) => (task.id === taskId ? response.data : task)));
-    } catch (error) {
-      console.error('Error adding due date to task:', error);
     }
   };
 
   const toggleComplete = async (id) => {
-    const task = tasks.find((task) => task.id === id);
+    const task = tasks.find((task) => task._id === id);
+    if (task) {
+      try {
+        const response = await axios.put(`http://localhost:5000/tasks/${id}`, {
+          ...task,
+          completed: !task.completed,
+        });
+        setTasks(tasks.map((task) => (task._id === id ? response.data : task)));
+      } catch (error) {
+        console.error('Error toggling task completion:', error);
+      }
+    }
+  };
+
+  const deleteTask = async (id) => {
     try {
-      const response = await axios.put(`http://localhost:5000/tasks/${id}`, {
-        ...task,
-        completed: !task.completed,
-      });
-      setTasks(tasks.map((task) => (task.id === id ? response.data : task)));
+      await axios.delete(`http://localhost:5000/tasks/${id}`);
+      setTasks(tasks.filter((task) => task._id !== id));
     } catch (error) {
-      console.error('Error toggling task completion:', error);
+      console.error('Error deleting task:', error);
     }
   };
 
@@ -140,8 +101,8 @@ const addTask = async (text, dueDate, category, priorities) => {
               <select id="priority" name="priority">
                 <option value="">select priority</option>
                 <option value="High">High</option>
-                <option value="moderate">Moderate</option>
-                <option value="low">low</option>
+                <option value="Moderate">Moderate</option>
+                <option value="Low">Low</option>
               </select><br><br>
             </form>
           </div>
@@ -166,26 +127,25 @@ const addTask = async (text, dueDate, category, priorities) => {
     }
   };
 
-  const closeAddTaskModal = () => {
-    setShowAddTaskModal(false);
-  };
-
-  const filteredTasks = tasks.filter((task) => activeCategory === 'All' || task.categories.includes(activeCategory));
+  const filteredTasks = tasks.filter((task) => {
+    if (activeCategory === 'All') return true;
+    if (activeCategory === 'Completed') return task.completed;
+    if (activeCategory === 'Pending') return !task.completed;
+    return task.categories.includes(activeCategory);
+  });
 
   return (
     <>
       <Header />
       <div className="Main">
         <div className="sidebar">
-          <button className={activeCategory === 'All' ? 'active' : ''} onClick={() => setActiveCategory('All')}>All</button><hr></hr>
-          <button className={activeCategory === 'Personal' ? 'active' : ''} onClick={() => setActiveCategory('Personal')}>Personal</button><hr></hr>
-          <button className={activeCategory === 'Work' ? 'active' : ''} onClick={() => setActiveCategory('Work')}>Work</button><hr></hr>
-          <button className={activeCategory === 'Study' ? 'active' : ''} onClick={() => setActiveCategory('Study')}>Study</button><hr></hr>
-          <button className={activeCategory === 'Completed' ? 'active' : ''} onClick={() => setActiveCategory('Completed')}>Completed</button><hr></hr>
-          <button className={activeCategory === 'Pending' ? 'active' : ''} onClick={() => setActiveCategory('Pending')}>Pending</button><hr></hr>
-          <button className={activeCategory === 'Deleted' ? 'active' : ''} onClick={() => setActiveCategory('Deleted')}>Deleted</button>
+          <button className={activeCategory === 'All' ? 'active' : ''} onClick={() => setActiveCategory('All')}>All</button><hr />
+          <button className={activeCategory === 'Personal' ? 'active' : ''} onClick={() => setActiveCategory('Personal')}>Personal</button><hr />
+          <button className={activeCategory === 'Work' ? 'active' : ''} onClick={() => setActiveCategory('Work')}>Work</button><hr />
+          <button className={activeCategory === 'Study' ? 'active' : ''} onClick={() => setActiveCategory('Study')}>Study</button><hr />
+          <button className={activeCategory === 'Completed' ? 'active' : ''} onClick={() => setActiveCategory('Completed')}>Completed</button><hr />
+          <button className={activeCategory === 'Pending' ? 'active' : ''} onClick={() => setActiveCategory('Pending')}>Pending</button><hr />
           <button onClick={openAddTaskModal}>Add Task</button>
-
         </div>
         {duplicateTaskMessage && <p className="duplicate-task-message">{duplicateTaskMessage}</p>}
         {filteredTasks.length > 0 ? (
@@ -193,10 +153,6 @@ const addTask = async (text, dueDate, category, priorities) => {
             tasks={filteredTasks}
             onDelete={deleteTask}
             onToggle={toggleComplete}
-            onEdit={editTask}
-            onAddCategory={addCategoryToTask}
-            onRemoveCategory={removeCategoryFromTask}
-            onAddDueDate={addDueDateToTask}
           />
         ) : (
           <h2 className='No-task'>No tasks to show</h2>

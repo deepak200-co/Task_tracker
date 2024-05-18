@@ -38,7 +38,8 @@ const Header = () => {
             {dropdownOpen && (
               <div className="dropdown-content">
                 <button onClick={handleLogout}>Logout</button>
-                <button >example</button>
+                <button onClick={toggleDropdown}>Close</button>
+
               </div>
             )}
           </div>

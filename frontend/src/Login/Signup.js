@@ -120,7 +120,7 @@ const Signup = () => {
                                     color: 'white',
                                     fontWeight: '600',
                                     marginLeft: '5px',
-                                    cursor: 'pointer', // Add cursor pointer for better UX
+                                    cursor: 'pointer', 
                                 }}>
                                     Login
                                 </span>
