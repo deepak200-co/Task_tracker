@@ -17,7 +17,7 @@ function Main() {
       if (user) {
         try {
           const response = await axios.post(
-            "http://localhost:5000/tasks/email",
+            "https://task-tracker-backend-bktk.onrender.com/tasks/email",
             { email: user.email }
           );
           setTasks(response.data);
@@ -35,7 +35,7 @@ function Main() {
       setDuplicateTaskMessage('Task already exists!');
     } else {
       try {
-        const response = await axios.post('http://localhost:5000/tasks', {
+        const response = await axios.post('https://task-tracker-backend-bktk.onrender.com/tasks', {
           text,
           dueDate,
           categories: [category],
@@ -54,7 +54,7 @@ function Main() {
     const task = tasks.find((task) => task._id === id);
     if (task) {
       try {
-        const response = await axios.put(`http://localhost:5000/tasks/${id}`, {
+        const response = await axios.put(`https://task-tracker-backend-bktk.onrender.com/tasks/${id}`, {
           ...task,
           completed: !task.completed,
         });
@@ -67,7 +67,7 @@ function Main() {
 
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/tasks/${id}`);
+      await axios.delete(`https://task-tracker-backend-bktk.onrender.com/tasks/${id}`);
       setTasks(tasks.filter((task) => task._id !== id));
     } catch (error) {
       console.error('Error deleting task:', error);

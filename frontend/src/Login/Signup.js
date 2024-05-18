@@ -51,7 +51,7 @@ const Signup = () => {
             email: email,
 
         }
-        axios.post(`http://localhost:5000/register`, user);
+        axios.post(`https://task-tracker-backend-bktk.onrender.com/register`, user);
 
     }
     const handleGoogleSignIn = () => {
@@ -61,7 +61,7 @@ const Signup = () => {
             email: googleuser.email,
         };
 
-        axios.post(`http://localhost:5000/register`, user);
+        axios.post(`https://task-tracker-backend-bktk.onrender.com/register`, user);
     }
 
 
