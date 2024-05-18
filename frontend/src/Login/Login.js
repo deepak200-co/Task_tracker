@@ -100,10 +100,12 @@ const Login = () => {
               <input type="email"
                 className="email"
                 placeholder="email address"
+                value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               <input type="password"
                 className="password"
+                value={password}
                 placeholder="password"
                 onChange={(e) => setPassword(e.target.value)}
               />
