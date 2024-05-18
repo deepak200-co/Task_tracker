@@ -33,7 +33,7 @@ const mongoose = require("mongoose");
 const taskSchema = new mongoose.Schema({
     text: {
         type: String,
-        required: [true, 'Path `text` is required.']
+        required: true
     },
     dueDate: {
         type: Date,
@@ -46,7 +46,7 @@ const taskSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: [true, 'Path `user` is required.']
+        required: true
     },
     completed: {
         type: Boolean,

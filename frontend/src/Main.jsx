@@ -378,6 +378,7 @@ function Main() {
       }
     }
   };
+  
 
   const deleteTask = async (id) => {
     try {
@@ -507,12 +508,16 @@ function Main() {
     <>
       <Header />
       <div className="Main">
-        <div className="category-buttons">
-          <button className={activeCategory === 'All' ? 'active' : ''} onClick={() => setActiveCategory('All')}>All</button>
-          <button className={activeCategory === 'Personal' ? 'active' : ''} onClick={() => setActiveCategory('Personal')}>Personal</button>
-          <button className={activeCategory === 'Work' ? 'active' : ''} onClick={() => setActiveCategory('Work')}>Work</button>
-          <button className={activeCategory === 'Study' ? 'active' : ''} onClick={() => setActiveCategory('Study')}>Study</button>
+        <div className="sidebar">
+          <button className={activeCategory === 'All' ? 'active' : ''} onClick={() => setActiveCategory('All')}>All</button><hr></hr>
+          <button className={activeCategory === 'Personal' ? 'active' : ''} onClick={() => setActiveCategory('Personal')}>Personal</button><hr></hr>
+          <button className={activeCategory === 'Work' ? 'active' : ''} onClick={() => setActiveCategory('Work')}>Work</button><hr></hr>
+          <button className={activeCategory === 'Study' ? 'active' : ''} onClick={() => setActiveCategory('Study')}>Study</button><hr></hr>
+          <button className={activeCategory === 'Completed' ? 'active' : ''} onClick={() => setActiveCategory('Completed')}>Completed</button><hr></hr>
+          <button className={activeCategory === 'Pending' ? 'active' : ''} onClick={() => setActiveCategory('Pending')}>Pending</button><hr></hr>
+          <button className={activeCategory === 'Deleted' ? 'active' : ''} onClick={() => setActiveCategory('Deleted')}>Deleted</button>
           <button onClick={openAddTaskModal}>Add Task</button>
+
         </div>
         {duplicateTaskMessage && <p className="duplicate-task-message">{duplicateTaskMessage}</p>}
         {filteredTasks.length > 0 ? (

@@ -94,7 +94,7 @@ const Task = ({ task, onDelete, onToggle, onEdit, onAddCategory, onRemoveCategor
   };
 
   const handleSaveClick = () => {
-    onEdit(task._id, newText); // Using _id instead of id
+    onEdit(task._id, newText);
     setEditing(false);
   };
 
